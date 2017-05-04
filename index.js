@@ -3,9 +3,11 @@
  */
 const http = require('http');
 const url = require('url');
-const jsonpatch = require('fast-json-patch');
-var json1 = require('./omniscol_newedt_dbdump_2017-02-28T23-19-06.json');
-var json2 = require('./omniscol_newedt_timetable-2_2017-02-28T00-45-12.json');
+
+const json1 = require('./omniscol_newedt_dbdump_2017-02-28T23-19-06.json');
+const json2 = require('./omniscol_newedt_timetable-2_2017-02-28T00-45-12.json');
+
+let json;
 
 const server = http.createServer((req, res) => {
 	const page = url.parse(req.url).pathname;
@@ -43,12 +45,11 @@ const server = http.createServer((req, res) => {
         '    </body>' +
         '</html>'));
 	if (page === '/') {
+		json = JSON.stringify(json1.timetables);
 
-        var json=JSON.stringify(json1.timetables);
+		res.write(json);
 
-        res.write(json);
-
-        res.write(String('<!DOCTYPE html>' +
+		res.write(String('<!DOCTYPE html>' +
             '<html>' +
             '    <head>' +
             '             <meta charset="utf-8" />' +
@@ -56,38 +57,29 @@ const server = http.createServer((req, res) => {
             '    </head>' +
             '</html>'));
 	} else if (page === '/eleve') {
+		json = JSON.stringify(json1.users);
 
-        var json=JSON.stringify(json1.users);
-
-       res.write(json)
-
-
-
-        res.write(String('<!DOCTYPE html>' +
+		res.write(json);
+		res.write(String('<!DOCTYPE html>' +
             '<html>' +
             '    <head>' +
             '             <meta charset="utf-8" />' +
             '             <title>eleve</title>' +
             '    </head>' +
-            '<body>' +
-
-            '<p id=\'essai\'></p>' +
-            '</body>' +
             '</html>'));
-
-    } else if (page === '/prof') {
-        res.write(String('<!DOCTYPE html>' +
+	} else if (page === '/prof') {
+		res.write(String('<!DOCTYPE html>' +
             '<html>' +
             '    <head>' +
             '             <meta charset="utf-8" />' +
             '             <title>prof</title>' +
             '    </head>' +
             '</html>'));
-        var json=JSON.stringify(json2.teachers);
+		json = JSON.stringify(json2.teachers);
 
-        res.write(json);
+		res.write(json);
 	} else if (page === '/matiere') {
-        res.write(String('<!DOCTYPE html>' +
+		res.write(String('<!DOCTYPE html>' +
             '<html>' +
             '    <head>' +
             '             <meta charset="utf-8" />' +
@@ -95,9 +87,7 @@ const server = http.createServer((req, res) => {
             '    </head>' +
             '</html>'));
 		res.write('Voici les matieres');
-
 	}
-
 	res.end();
 });
 server.listen(8080);
