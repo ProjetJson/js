@@ -8,9 +8,11 @@ const json1 = require('./omniscol_newedt_dbdump_2017-02-28T23-19-06.json');
 const json2 = require('./omniscol_newedt_timetable-2_2017-02-28T00-45-12.json');
 
 let i;
+let j;
 
 const server = http.createServer((req, res) => {
 	const page = url.parse(req.url).pathname;
+
 	res.writeHead(200, {'Content-Type': 'text/html'});
 	res.write(String('<!DOCTYPE html>' +
         '<html>' +
@@ -22,15 +24,32 @@ const server = http.createServer((req, res) => {
         '               {' +
         '                   background-color: #1BC5B3;' +
         '               }' +
+        '               .classes{margin-left:275px;}' +
+        '               .classe' +
+        '               {' +
+        '                   color:white;' +
+        '                   margin-left:10px;' +
+        '                   background-color: #1BC5B3;' +
+        '               }' +
         '               .sommaire' +
         '               {' +
         '                   background-color: white;' +
+        '               }' +
+        '               .nom' +
+        '               {' +
+        '                    display: inline;' +
+        '                    color:#6A7799;' +
+        '                    font-size: 17px;' +
+        '                    font-family: Calibri;' +
+        '                    padding-bottom:10px;' +
+        '                    padding-right:50px;' +
+        '                    padding-left:50px;' +
         '               }' +
         '               header' +
         '               {' +
         '                   z-index: 1; position: fixed; left: 0; top: 0; width: 100%;' +
         '               }' +
-        '               a ' +
+        '               .lien ' +
         '               {' +
         '                   color:#B39E9D;' +
         '                   font-size: 20px;' +
@@ -41,23 +60,22 @@ const server = http.createServer((req, res) => {
         '               th' +
         '               {' +
         '                   padding-top:20px;' +
-        '                   padding-left: 50px;' +
+        '                   padding-left: 60px;' +
+        '                   padding-right: 40px;' +
         '                   color:#857784;' +
         '                   font-size: 17px;' +
         '                   font-family: Calibri;' +
         '               }' +
-        '               p' +
-        '               {' +
-        '                   color:#6A7799;' +
-        '                   font-size: 17px;' +
-        '                   font-family: Calibri;' +
-        '                   padding-bottom:10px' +
-        '               }' +
-        '               button' +
+        '               .supprimer' +
         '               {' +
         '                   background-color:#E64C66;' +
+        '                   display: inline;' +
+        '                   margin-bottom:10px;' +
         '                   border-color:red;' +
+        '                   position:relative;' +
+        '                   left:850px;' +
         '               }' +
+        '               .lienS{text-decoration:none;}' +
         '               body' +
         '               {' +
         '                   background-color: white;' +
@@ -75,71 +93,106 @@ const server = http.createServer((req, res) => {
         '           <div class=\'sommaire\'> ' +
         '           <center>' +
         '               <br>' +
-        '                <a  href=\'/eleve\'> Eleve </a>' +
-        '               <a  href=\'/prof\'> Professeur </a>' +
-        '               <a  href=\'matiere\'"> Matière </a> ' +
-        '               <a  href="/"> Emploi du temps </a>' +
+        '                <a  href=\'/eleve\' class="lien"> Eleve </a>' +
+        '               <a  href=\'/prof\' class="lien"> Professeur </a>' +
+        '               <a  href=\'matiere\'" class="lien"> Matière </a> ' +
+        '               <a  href="/" class="lien"> Emploi du temps </a>' +
         '               <br><br>' +
         '           </center>' +
         '       </div>' +
         '           <div class=\'espace2\' style="background-color: #F0F2F4;"><br></div>' +
         '           </header>' +
         '<br><br><br><br><br><br>' +
-
         '</html>'));
+
+	function bouton() {
+		res.write('<div class="classes"><a href="/6A"><button class="classe" type="button">' +
+            json2.classes.classe[0].name +
+            '</button></a><a href="/6B"><button class="classe" type="button">' +
+            json2.classes.classe[1].name +
+            '</button></a><a href="/6C"><button class="classe" type="button">' +
+            json2.classes.classe[2].name +
+            '</button></a><a href="/6D"><button class="classe" type="button">' +
+            json2.classes.classe[3].name +
+            '</button></a><a href="/5A"><button class="classe" type="button">' +
+            json2.classes.classe[4].name +
+            '</button></a><a href="/5B"><button class="classe" type="button">' +
+            json2.classes.classe[5].name +
+            '</button></a><a href="/5C"><button class="classe" type="button">' +
+            json2.classes.classe[6].name +
+            '</button></a><a href="/5D"><button class="classe" type="button">' +
+            json2.classes.classe[7].name +
+            '</button></a> <a href="/4A"><button class="classe" type="button">' +
+            json2.classes.classe[8].name +
+            '</button></a><a href="/4B"><button class="classe" type="button">' +
+            json2.classes.classe[9].name +
+            '</button></a><a href="/4C"><button class="classe" type="button">' +
+            json2.classes.classe[10].name +
+            '</button></a><a href="/4D"><button class="classe" type="button">' +
+            json2.classes.classe[11].name +
+            '</button></a><a href="/3A"><button class="classe" type="button">' +
+            json2.classes.classe[12].name +
+            '</button></a><a href="/3B"><button class="classe" type="button">' +
+            json2.classes.classe[13].name +
+            '</button></a><a href="/3C"><button class="classe" type="button">' +
+            json2.classes.classe[14].name +
+            '</button></a><a href="/3D"><button class="classe" type="button">' +
+            json2.classes.classe[15].name +
+            '</button></a></div>');
+	}
+
+	function emploi() {
+		console.log('ok');
+		res.write('<title>Eleve</title>');
+	}
 
 	if (page === '/') {
-		res.write(String('<!DOCTYPE html>' +
-            '<html>' +
-            '    <head>' +
-            '             <meta charset="utf-8" />' +
-            '             <title>emploi du temps</title>' +
-            '    </head>' +
-            '</html>'));
+		res.write('<title>emploi du temps</title>');
+		bouton();
 	} else if (page === '/eleve') {
-		res.write(String('<!DOCTYPE html>' +
-        '<html>' +
-        '    <head>' +
-        '             <meta charset="utf-8" />' +
-        '             <link rel="stylesheet" href="./css/design.css"/>' +
-        '             <title>Eleve</title>' +
-        '    </head>' +
-        '   <div class="eleves">' +
-        '       <table>' +
-        '           <tr>' +
-        '               <td json2">' +
-        '                   <table class="dataTable">' +
-        '                       <tr>' +
-        '                           <th>Nom</th>' +
-        '                           <th>Prénom</th>' +
-        '                       </tr>' +
-        '                   </table>' +
-        '               </td>' +
-        '           </tr>' +
-        '       </table>' +
-        '   </div>' +
-        '</html>'));
+		res.write('<title>Eleve</title>' +
+            '<table><tr><th>Nom</th><th>Prénom</th></tr></table><br>');
 
 		for (i in json1.users) {
 			if (json1.users[i].roles[0] === 'student') {
-				res.write('<p style="padding-left: 50px;">' +
-                   json1.users[i].last_name + ' ' +
-                   json1.users[i].first_name + ' ' +
-                    '<button type="button">Supprimer</button>' +
-                   '</p>');
+				res.write('<div class="nom" >' + json1.users[i].last_name + '</div>' +
+                    '<div class="nom">' + json1.users[i].first_name + '</div>' +
+                    '<a class="lienS" href="/supprimer">' +
+                    '<button class="supprimer" type="button">Supprimer</button></a>' +
+                    '<br>');
 			}
 		}
+		res.write('<br>');
 	} else if (page === '/prof') {
-		res.write('<title>prof</title>');
+		res.write('<title>prof</title>' +
+            '<table><tr><th>Prénom</th><th>Nom</th><th>Matière</th></tr></table><br>');
+
+		for (j in json2.classes) {
+			for (i in json2.classes[j].courses) {
+				res.write('<p>json2.classes[j].courses[i].teachers' +
+                    'json2.classes[j].courses[i].subject' +
+                    '<a href="/supprimer" ><button type=button>Supprimer</button></a></p>');
+			}
+		}
+
+		res.write('<br>');
 	} else if (page === '/matiere') {
-		res.write(String('<!DOCTYPE html>' +
-            '<html>' +
-            '    <head>' +
-            '             <meta charset="utf-8" />' +
-            '             <title>matiere</title>' +
-            '    </head>' +
-            '</html>'));
+		res.write('<title>matiere</title>');
 		res.write('Voici les matieres');
+	} else if (page === '/supprimer') {
+		emploi();
+	} else if (page === '/6A' || page === '/6B' || page === '/6C' || page === '/6D') {
+		res.write('<title>emploi du temps</title>');
+		bouton();
+	} else if (page === '/5A' || page === '/5B' || page === '/5C' || page === '/5D') {
+		res.write('<title>emploi du temps</title>');
+		bouton();
+	} else if (page === '/4A' || page === '/4B' || page === '/4C' || page === '/4D') {
+		res.write('<title>emploi du temps</title>');
+		bouton();
+	} else if (page === '/3A' || page === '/3B' || page === '/3C' || page === '/3D') {
+		res.write('<title>emploi du temps</title>');
+		bouton();
 	}
 	res.end();
 });
