@@ -12,7 +12,6 @@ let j;
 
 const server = http.createServer((req, res) => {
 	const page = url.parse(req.url).pathname;
-
 	res.writeHead(200, {'Content-Type': 'text/html'});
 	res.write(String('<!DOCTYPE html>' +
         '<html>' +
@@ -37,11 +36,9 @@ const server = http.createServer((req, res) => {
         '               }' +
         '               .nom' +
         '               {' +
-        '                    display: inline;' +
-        '                    color:#6A7799;' +
+        '                    color:#6A7799; display : inline; ' +
         '                    font-size: 17px;' +
         '                    font-family: Calibri;' +
-        '                    padding-bottom:10px;' +
         '                    padding-right:50px;' +
         '                    padding-left:50px;' +
         '               }' +
@@ -66,14 +63,23 @@ const server = http.createServer((req, res) => {
         '                   font-size: 17px;' +
         '                   font-family: Calibri;' +
         '               }' +
+        '               .modifier' +
+        '               {' +
+        '                   background-color:#1BC5B3;' +
+        '                   border-radius: 5px;' +
+        '                   margin-bottom:10px;' +
+        '                   border-color:turquoise;' +
+        '                   position:relative;' +
+        '                   left:650px;' +
+        '               }' +
         '               .supprimer' +
         '               {' +
         '                   background-color:#E64C66;' +
-        '                   display: inline;' +
         '                   margin-bottom:10px;' +
+        '                   border-radius: 5px;' +
         '                   border-color:red;' +
         '                   position:relative;' +
-        '                   left:850px;' +
+        '                   left:700px;' +
         '               }' +
         '               .lienS{text-decoration:none;}' +
         '               body' +
@@ -140,29 +146,30 @@ const server = http.createServer((req, res) => {
             json2.classes.classe[15].name +
             '</button></a></div>');
 	}
-
-	function emploi() {
-		console.log('ok');
-		res.write('<title>Eleve</title>');
+	function redirection() {
+	    res.write('<head><meta http-equiv="refresh" content="0; URL=/eleve" ></head>');
 	}
+
+    function del(){
+        var deletedItem = json1.users.splice(31, 1);
+    }
 
 	if (page === '/') {
 		res.write('<title>emploi du temps</title>');
 		bouton();
 	} else if (page === '/eleve') {
 		res.write('<title>Eleve</title>' +
-            '<table><tr><th>Nom</th><th>Prénom</th></tr></table><br>');
+            '<table><tr><th>Nom</th><th>Prénom</th></tr>');
 
 		for (i in json1.users) {
 			if (json1.users[i].roles[0] === 'student') {
-				res.write('<div class="nom" >' + json1.users[i].last_name + '</div>' +
-                    '<div class="nom">' + json1.users[i].first_name + '</div>' +
-                    '<a class="lienS" href="/supprimer">' +
-                    '<button class="supprimer" type="button">Supprimer</button></a>' +
-                    '<br>');
+				res.write('<tr><td><div class="nom">' + json1.users[i].last_name + '</td></div>' +
+                    '<td><div class="nom">' + json1.users[i].first_name + '</td></div>' +
+                    '<td><a href="/modifier" ><button class="modifier"  type=button>Modifier</button></a></td>' +
+                    '<td><a href="/supprimer" ><button class="supprimer" type=button>Supprimer</button></a></td></tr>');
 			}
 		}
-		res.write('<br>');
+		res.write('</table><br>');
 	} else if (page === '/prof') {
 		res.write('<title>prof</title>' +
             '<table><tr><th>Prénom</th><th>Nom</th><th>Matière</th></tr></table><br>');
@@ -171,16 +178,31 @@ const server = http.createServer((req, res) => {
 			for (i in json2.classes[j].courses) {
 				res.write('<p>json2.classes[j].courses[i].teachers' +
                     'json2.classes[j].courses[i].subject' +
-                    '<a href="/supprimer" ><button type=button>Supprimer</button></a></p>');
+
+                    '<a class="nom" href="/supprimer" ><button type=button>Supprimer</button></a>');
 			}
 		}
 
 		res.write('<br>');
 	} else if (page === '/matiere') {
-		res.write('<title>matiere</title>');
-		res.write('Voici les matieres');
-	} else if (page === '/supprimer') {
-		emploi();
+		res.write('<title>matiere</title>' +
+            '<table><tr><th>Nom</th><th>Prénom</th>');
+
+		for (i in json1.users) {
+			if (json1.users[i].roles[0] === 'student') {
+				res.write('<tr><td><div class="nom">' + json1.users[i].last_name + '</td></div>' +
+                    '<td><div class="nom">' + json1.users[i].first_name + '</td></div>' +
+                    '<td><a href="/modifier" ><button class="modifier"  type=button>Modifier</button></a></td>' +
+                    '<td><a href="/supprimer" ><button class="supprimer" type=button>Supprimer</button></a></td></tr>');
+			}
+		}
+		res.write('</table>');
+	}	else if (page === '/supprimer') {
+
+        del();
+	    redirection();
+	} else if (page === '/modifier') {
+		redirection();
 	} else if (page === '/6A' || page === '/6B' || page === '/6C' || page === '/6D') {
 		res.write('<title>emploi du temps</title>');
 		bouton();
@@ -193,6 +215,8 @@ const server = http.createServer((req, res) => {
 	} else if (page === '/3A' || page === '/3B' || page === '/3C' || page === '/3D') {
 		res.write('<title>emploi du temps</title>');
 		bouton();
+	}	else {
+		res.write('<center>La page n\'existe pas.</center>');
 	}
 	res.end();
 });
