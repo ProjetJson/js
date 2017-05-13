@@ -3,17 +3,18 @@
  */
 const http = require('http');
 const url = require('url');
-var querystring = require('querystring');
+const querystring = require('querystring');
 
 const json1 = require('./omniscol_newedt_dbdump_2017-02-28T23-19-06.json');
 const json2 = require('./omniscol_newedt_timetable-2_2017-02-28T00-45-12.json');
 
 let i;
 let j;
+let h;
 
 const server = http.createServer((req, res) => {
 	const page = url.parse(req.url).pathname;
-    var params = querystring.parse(url.parse(req.url).query);
+	const params = querystring.parse(url.parse(req.url).query);
 
 	res.writeHead(200, {'Content-Type': 'text/html'});
 	res.write(String('<!DOCTYPE html>' +
@@ -150,21 +151,19 @@ const server = http.createServer((req, res) => {
             '</button></a></div>');
 	}
 	function redirectionE() {
-	    res.write('<head><meta http-equiv="refresh" content="0; URL=/eleve" ></head>');
+		res.write('<head><meta http-equiv="refresh" content="0; URL=/eleve" ></head>');
 	}
-    function redirectionP() {
-        res.write('<head><meta http-equiv="refresh" content="0; URL=/prof" ></head>');
-    }
+	function redirectionP() {
+		res.write('<head><meta http-equiv="refresh" content="0; URL=/prof" ></head>');
+	}
 
-    function del(){
-
-	    for ( i in json1.users)
-        {   if (params['prenom']=== json1.users[i].first_name || params['nom']=== json1.users[i].last_name)
-            {
-                var deletedItem = json1.users.splice(i, 1);
-            }
-        }
-    }
+	function del() {
+	    for (i in json1.users) {
+		if (params.prenom === json1.users[i].first_name || params.nom === json1.users[i].last_name) {
+			const deletedItem = json1.users.splice(i, 1);
+		}
+	    }
+	}
 
 	if (page === '/') {
 		res.write('<title>emploi du temps</title>');
@@ -177,30 +176,28 @@ const server = http.createServer((req, res) => {
 			if (json1.users[i].roles[0] === 'student') {
 				res.write('<tr><td><div class="nom">' + json1.users[i].last_name + '</td></div>' +
                     '<td><div class="nom">' + json1.users[i].first_name + '</td></div>' +
-                    '<td><a href="/modifierE?nom='+json1.users[i].last_name+'&prenom='+json1.users[i].first_name+'" >' +
+                    '<td><a href="/modifierE?nom=' + json1.users[i].last_name + '&prenom=' + json1.users[i].first_name + '" >' +
                     '<button class="modifier"  type=button>Modifier</button></a></td>' +
-                    '<td><a href="/supprimerE?nom='+json1.users[i].last_name+'&prenom='+json1.users[i].first_name+'" >' +
+                    '<td><a href="/supprimerE?nom=' + json1.users[i].last_name + '&prenom=' + json1.users[i].first_name + '" >' +
                     '<button class="supprimer" type=button>Supprimer</button></a></td></tr>');
 			}
 		}
 		res.write('</table><br>');
 	} else if (page === '/prof') {
-
-        res.write('<title>Prof</title>' +
+		res.write('<title>Prof</title>' +
             '<table><tr><th>Nom</th><th>Prénom</th></tr>');
 
-        for (i in json1.users) {
-            if (json1.users[i].roles[0] === 'teacher') {
-                res.write('<tr><td><div class="nom">' + json1.users[i].last_name + '</td></div>' +
+		for (i in json1.users) {
+			if (json1.users[i].roles[0] === 'teacher') {
+				res.write('<tr><td><div class="nom">' + json1.users[i].last_name + '</td></div>' +
                     '<td><div class="nom">' + json1.users[i].first_name + '</td></div>' +
-                    '<td><a href="/modifierP?nom='+json1.users[i].last_name+'&prenom='+json1.users[i].first_name+'" >' +
+                    '<td><a href="/modifierP?nom=' + json1.users[i].last_name + '&prenom=' + json1.users[i].first_name + '" >' +
                     '<button class="modifier"  type=button>Modifier</button></a></td>' +
-                    '<td><a href="/supprimerP?nom='+json1.users[i].last_name+'&prenom='+json1.users[i].first_name+'" >' +
+                    '<td><a href="/supprimerP?nom=' + json1.users[i].last_name + '&prenom=' + json1.users[i].first_name + '" >' +
                     '<button class="supprimer" type=button>Supprimer</button></a></td></tr>');
-            }
-        }
-        res.write('</table><br>');
-
+			}
+		}
+		res.write('</table><br>');
 	} else if (page === '/matiere') {
 		res.write('<title>matiere</title>' +
             '<table><tr><th>Nom</th><th>Prénom</th>');
@@ -215,68 +212,57 @@ const server = http.createServer((req, res) => {
 		}
 		res.write('</table>');
 	}	else if (page === '/supprimerE') {
-
-        del();
+		del();
 	    redirectionE();
-
 	} 	else if (page === '/supprimerP') {
-
-        del();
-        redirectionP();
-
-    }else if (page === '/modifierE') {
+		del();
+		redirectionP();
+	} else if (page === '/modifierE') {
 		redirectionE();
 	} else if (page === '/6A' || page === '/6B' || page === '/6C' || page === '/6D') {
 		res.write('<title>emploi du temps</title>');
 		bouton();
-		var h;
 
-        res.write('<table><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th></tr>');
+		res.write('<table><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th></tr>');
 
-        for (j=0;j<12;j++) {
-                h=8+j;
-                res.write('<tr><td>'+h+'h00</td></tr>');
-
-        }
-        res.write('</table><br>');
-
+		for (j = 0; j < 12; j++) {
+			h = 8 + j;
+			res.write('<tr><td>' + h + 'h00</td></tr>');
+		}
+		res.write('</table><br>');
 	} else if (page === '/5A' || page === '/5B' || page === '/5C' || page === '/5D') {
 		res.write('<title>emploi du temps</title>');
 		bouton();
 
-        res.write('<table><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th></tr>');
+		res.write('<table><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th></tr>');
 
-        for (j=0;j<12;j++) {
-            h=8+j;
-            res.write('<tr><td>'+h+'h00</td></tr>');
-
-        }
-        res.write('</table><br>');
-
+		for (j = 0; j < 12; j++) {
+			h = 8 + j;
+			res.write('<tr><td>' + h + 'h00</td></tr>');
+		}
+		res.write('</table><br>');
 	} else if (page === '/4A' || page === '/4B' || page === '/4C' || page === '/4D') {
 		res.write('<title>emploi du temps</title>');
 		bouton();
 
-        res.write('<table><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th></tr>');
+		res.write('<table><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th></tr>');
 
-        for (j=0;j<12;j++) {
-            h=8+j;
-            res.write('<tr><td>'+h+'h00</td></tr>');
-
-        }
-        res.write('</table><br>');
+		for (j = 0; j < 12; j++) {
+			h = 8 + j;
+			res.write('<tr><td>' + h + 'h00</td></tr>');
+		}
+		res.write('</table><br>');
 	} else if (page === '/3A' || page === '/3B' || page === '/3C' || page === '/3D') {
 		res.write('<title>emploi du temps</title>');
 		bouton();
 
-        res.write('<table><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th></tr>');
+		res.write('<table><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th></tr>');
 
-        for (j=0;j<12;j++) {
-            h=8+j;
-            res.write('<tr><td>'+h+'h00</td></tr>');
-
-        }
-        res.write('</table><br>');
+		for (j = 0; j < 12; j++) {
+			h = 8 + j;
+			res.write('<tr><td>' + h + 'h00</td></tr>');
+		}
+		res.write('</table><br>');
 	} else {
 		res.write('<center>La page n\'existe pas.</center>');
 	}
